@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Using a constructor to set up common objects</title>
+  <meta charset="utf-8">
+  <script src="../assert.js"></script>
+  <link rel="stylesheet" type="text/css" href="../assert.css">
+</head>
+<body>
+	<script type="text/javascript">
+    function Ninja(n) {
+      this.count=0;
+      this.skulk = function() {
+        return this;
+      };
+      this.add = function() {
+        while (n>=0){
+          n--;
+          this.count ++;
+        }
+
+      };
+    }
+
+    var ninja1 = new Ninja(5);
+    var ninja2 = new Ninja(10);
+
+    ninja1.add();
+    ninja2.add();
+
+
+
+    console.log("Ninja1",ninja1);
+    console.log("Ninja2",ninja2);
+
+
+    assert(ninja1.skulk() === ninja1,
+      "The 1st ninja is skulking");
+    assert(ninja2.skulk() === ninja2,
+      "The 2nd ninja is skulking");
+	</script>
+</body>
+</html>

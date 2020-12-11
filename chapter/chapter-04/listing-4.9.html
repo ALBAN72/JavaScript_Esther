@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Constructors explicitly returning object values</title>
+  <meta charset="utf-8">
+  <script src="../assert.js"></script>
+  <link rel="stylesheet" type="text/css" href="../assert.css">
+</head>
+<body>
+	<script>
+    var puppet = {
+      rules: false
+    };
+
+    function Emperor() {
+      this.rules = true;
+      return puppet;
+    }
+
+    console.log("Emperor() avant le new : ",Emperor());
+    console.log("Emperor().rules avant le new : ",Emperor().rules);
+
+    var emperor = new Emperor();
+
+    console.log("Emperor après le new : ",Emperor());
+    console.log("Emperor().rules : ",Emperor().rules);
+    console.log("emperor : ",emperor);
+    console.log("emperor : ",emperor.rules);
+
+    assert(emperor === puppet,
+      "The emperor is merely a puppet!");
+    assert(emperor.rules === false,
+      "The puppet does not know how to rule!");
+	</script>
+</body>
+</html>

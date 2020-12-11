@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>The arguments object aliases function parameters</title>
+  <meta charset="utf-8">
+  <script src="../assert.js"></script>
+  <link rel="stylesheet" type="text/css" href="../assert.css">
+</head>
+
+<body>
+  <script>
+    function infiltrate(person) {
+      assert(person.nom === 'gardener',
+        'The person is a gardener');
+      assert(arguments[0].nom === 'gardener',
+        'The first argument is a gardener');
+
+      arguments[0].nom = 'ninja';
+
+      assert(person.nom === 'ninja',
+        'The person is a ninja now');
+      assert(arguments[0].nom === 'ninja',
+        'The first argument is a ninja');
+
+      person.nom = 'gardener';
+
+      assert(person.nom === 'gardener',
+        'The person is a gardener once more');
+      assert(arguments[0].nom === 'gardener',
+        'The first argument is a gardener again');
+    }
+
+    var obj = {};
+    obj.nom = 'gardener';
+    obj.salutation = function() {
+      alert('Salut ! Je m\'appelle ' + this.nom + '.');
+    };
+
+    console.log("Objet : " ,obj);
+
+    //infiltrate("gardener");
+    infiltrate(obj);
+  </script>
+</body>
+</html>

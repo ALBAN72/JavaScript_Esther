@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Comparing a lambda function and a function expression</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="../assert.css">
+  <script src="../assert.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+  function forEach(list,callback) {
+    for (var n = 0; n < list.length; n++) {
+      callback.call(list[n],n);
+    }
+  }
+  var weapons = ['shuriken','katana','nunchucks'];
+  forEach(weapons,function(index){
+      assert(this == weapons [index],
+        "Got the expected value of " + weapons [index]);
+    }
+  );
+</script>
+
+</body>
+</html>

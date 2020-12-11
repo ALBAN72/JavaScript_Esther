@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>A simple performance counter</title>
+		<script>
+			maxCount = 10;
+		  console.time("My operation");
+
+			for(var n = 0; n < maxCount; n++){
+        console.log("n : ", n);
+      }
+			console.timeEnd("My operation");
+		</script>
+	</head>
+	<body>
+		Outputs to the console (press F12)
+	</body>
+</html>

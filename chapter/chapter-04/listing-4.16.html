@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Arrow functions and object literals</title>
+  <meta charset="utf-8">
+  <script src="../assert.js"></script>
+  <link rel="stylesheet" type="text/css" href="../assert.css">
+</head>
+<body>
+  <button id="btn" style="width:96px;height:48px;font-size:24px">0</button>
+  <script type="text/javascript">
+
+    let button = {
+      clicked: 0,
+      click: function(){
+        this.clicked += 1;
+        document.getElementById("btn").innerHTML = this.clicked;
+      }
+    };
+
+    let elem = document.getElementById("btn");
+    elem.addEventListener("click", button.click.bind(button));
+
+  </script>
+</body>
+</html>
