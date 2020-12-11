@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>A simple performance counter</title>
+		<script>
+
+			//https://developer.mozilla.org/fr/docs/Web/JavaScript/Guide/Utiliser_les_promesses
+			function faireUnePromiseALancienne(success, failure){
+				console.log("C'est fait : ");
+
+				// réussir une fois sur deux
+				if (Math.random() > .5) {
+					success("Reussite");
+				} else {
+					failure("Echec");
+				}
+			}
+
+			function successCallback(res) {
+				console.log("L'operation a reussi avec le message : " + res);
+			}
+
+			function failureCallback(err) {
+				console.error("L'operation a echoue avec le message : " + err);
+			}
+
+			faireUnePromiseALancienne(successCallback, failureCallback);
+
+		</script>
+	</head>
+	<body>
+		Outputs to the console (press F12)
+	</body>
+</html>

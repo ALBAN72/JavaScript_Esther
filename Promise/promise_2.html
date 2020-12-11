@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>A simple performance counter</title>
+		<script>
+
+			function successCallback(res) {
+				console.log("L'operation a reussi avec le message : " + res);
+			}
+
+			function failureCallback(err) {
+				console.error("L'operation a echoue avec le message : " + err);
+			}
+
+			const promise = new Promise((successCallback, failureCallback) => {
+				console.log("C'est fait");
+				// réussir une fois sur deux
+				if (Math.random() > .5) {
+					successCallback("Reussite");
+				} else {
+					failureCallback("Echec");
+				}
+			})
+
+			promise.then(successCallback, failureCallback);
+
+		</script>
+	</head>
+	<body>
+		Outputs to the console (press F12)
+	</body>
+</html>
