@@ -2,10 +2,30 @@
 <html>
 	<head>
 		<title>XHR</title>
+		<script>
+		src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"
+		</script>
+
+		<!-- Note : Si vous envoyez une requête à du code qui renvoie du XML plutôt qu’un fichier HTML statique,
+		vous devez spécifier des en-têtes de réponse pour que cela fonctionne avec Internet Explorer.
+		Si vous ne spécifiez pas l’en-tête Content-Type: application/xml, IE émettra une erreur JavaScript
+		« Objet attendu » après la ligne à laquelle vous avez tenté d’accéder à l’élément XML.
+
+		Note 2 : Si vous ne spécifiez pas l’en-tête Cache-Control: no-cache, le navigateur mettra la réponse en cache
+		et n’effectuera plus jamais la requête ultérieurement, ce qui peut rendre le débogage difficile.
+		Vous pouvez également ajouter un paramètre GET toujours différent, comme un timestamp ou un nombre aléatoire
+		(voir contourner le cache).
+
+		Note 3 : Si la variable httpRequest est utilisée globalement, des appels concurrents à makeRequest() peuvent s’écraser
+		l’un l’autre, provoquant une situation de compétition (race condition). On peut s’en prémunir en déclarant la
+		variable httpRequest locale à une closure contenant les fonctions AJAX. -->
+
+
 
 	</head>
 	<body>
 	<button id="ajaxButton" type="button">Faire une requete</button>
+	<div id="res" ></div>
 	<script>
 
 		//https://developer.mozilla.org/fr/docs/Web/Guide/AJAX/Premiers_pas
@@ -13,6 +33,7 @@
 			var httpRequest;
 
 			document.getElementById("ajaxButton").addEventListener('click', makeRequest);
+			document.getElementById("res").innerText="salut";
 
 			function makeRequest() {
 
@@ -23,17 +44,24 @@
 					return false;
 				}
 				httpRequest.onreadystatechange = alertContents;
-				httpRequest.open('GET', 'test.html');
+				let url = 'test.html';
+				httpRequest.open('GET', url  + ((/\?/).test(url) ? "&" : "?") + (new Date()).getTime(), true);
 				httpRequest.send();
 			}
 
-			function alertContents() {
-				if (httpRequest.readyState === XMLHttpRequest.DONE) {
-					if (httpRequest.status === 200) {
-						alert(httpRequest.responseText);
-					} else {
-						alert('Il y a eu un probleme avec la requete.');
-					}
+			function alertContents(httpRequest) {
+
+				try {
+						if (httpRequest.currentTarget.status === 200) {
+
+							document.getElementById("res").innerText=(httpRequest.currentTarget.responseText);
+
+						} else {
+							alert("Un problème est survenu au cours de la requete.");
+						}
+				}
+				catch( e ) {
+					alert("Une exception s’est produite : " + e.description);
 				}
 			}
 		})();
