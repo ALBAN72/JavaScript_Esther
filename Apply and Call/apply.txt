@@ -1,0 +1,91 @@
+https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Function/apply
+http://www.coursweb.ch/javascript/apply-call.html
+https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Op%C3%A9rateurs/L_op%C3%A9rateur_this#bind
+
+Apply et Call
+Lorsqu'une fonction est exécutée elle est liée à une instance d'un objet.
+Elle peut accéder aux propriétés et méthodes de cette instance avec l'opérateur this, par exemple:
+
+function test() {
+  this.x = 12; // modifie la propriété x de l'instance
+  alert(this.y); // affiche la valeur de la propriété y de l'instance
+  this.toto(); // appelle la fonction toto de l'instance
+}
+Contrairement aux langages de POO classiques, une fonction javascript peut "appartenir" à plusieurs objets.
+Et donc être appelée dans des contextes d'instances différents, on peu utiliser apply et call pour réaliser ça.
+
+function getHtmlColor() {
+  return "#" + this.couleur;
+}
+
+function Voiture(code_couleur) {
+  this.couleur = code_couleur;
+}
+
+function Rectangle(larg, haut, rgb) {
+  this.couleur = rgb;
+  this.largeur = larg;
+  this.hauteur = haut;
+}
+
+var v = new Voiture('ccff33');
+var r = new Rectangle(10, 12, 'ff0033');
+
+alert( getHtmlColor.apply(v) ); // affiche #ccff33
+alert( getHtmlColor.apply(r) ); // affiche #ff0033
+
+La fonction getHtmlColor fait usage de l'opérateur this qui lui permet d'accéder à la propriété couleur de l'instance. L'instance concernée correspond à la variable v ou r donnée comme paramètre de apply.
+
+apply et call fonctionnent de la même manière à une différence. La manière de passer les paramètres à la fonction appelée. apply attend deux paramètres, le premier étant une référence à l'instance, le deuxième étant un tableau contenant les arguments. call attend au moins un paramètre (celui de l'instance) et propage les paramètres reçus en excédent à la fonction appelée.
+
+une_fonction.apply(instance, tableau);
+une_fonction.call(instance, p1, p2, p3, ...);
+
+autre exemple :
+
+var person = {
+  fullName: function() {
+    return this.firstName + " " + this.lastName;
+  }
+}
+var person1 = {
+  firstName: "Mary",
+  lastName: "Doe"
+}
+person.fullName.apply(person1);  // Will return "Mary Doe"
+
+
+exemple :
+
+// Un objet peut être passé en premier argument
+// de call ou de apply
+var obj = { a: "Toto" };
+
+// Ici, on déclare une variable et la variable est affectée à l'objet global window comme propriété de celui-ci
+var a = "Global";
+
+function whatsThis(arg) {
+  // La valeur de this ici dépend de la façon
+  // dont la fonction est appelée
+  return this.a;
+}
+
+whatsThis();          // 'Global' car celui-ci dans la fonction n'est pas défini, il est donc défini par défaut sur l'objet global window
+whatsThis.call(obj);  // "Toto"
+whatsThis.apply(obj); // "Toto"
+
+function ajout(c, d){
+  return this.a + this.b + c + d;
+}
+
+var o = {a:1, b:3};
+
+// Le premier paramètre correspond à l'objet qu'on souhaite
+// lier à 'this', les paramètres suivants sont les arguments
+// à utiliser dans l'appel de la fonction
+ajout.call(o, 5, 7); // 1 + 3 + 5 + 7 = 16
+
+// Le premier paramètre correspond à l'objet qu'on souhaite
+// lier à 'this', le second paramètre est le tableau dont les
+// les éléments sont les arguments à passer à la fonction
+ajout.apply(o, [10, 20]); // 1 + 3 + 10 + 20 = 34

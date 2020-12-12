@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>A simple performance counter</title>
+		<script>
+
+			//On utilise principalement la declaration et les Arrow functions
+
+			//Function declarations and function expressions
+			function myFun1(){ return "OK rep de myFun1";}
+
+			//utilisation d'une Arrow functions (often called lambda functions)—A recent, ES6
+			let myFun2 = () => {return "Ok rep de myFun2"};
+
+			//Utilisation d'un constructors
+			let myFun3 = new Function('return "OK rep de myFun3";');
+
+			//Utilisation du generator
+			function* generator(i) {
+				yield i;
+				yield i + 15;
+			}
+
+			const gen = generator(15);
+
+			console.log(gen.next().value);
+			// expected output: 15
+
+			console.log(gen.next().value);
+			// expected output: 30
+
+			//Attention !!
+			//Les fonctions créées avec le constructeur Function() ne créent pas de closure liées au contexte de leur création.
+			// Ainsi, lorsqu'elles sont exécutées, elles ne peuvent accéder qu'aux variables globales et à leurs propres valeurs
+			// locales. Elles ne peuvent pas accéder aux variables de la portée dans laquelle le constructeur Function a été invoqué.
+			// Le comportement est différent de celui qu'on obtient avec eval avec du code contenant une expression de fonction.
+
+			//Exemple :
+
+			let x = 10;
+
+			function creerFonction1() {
+				let x = 20;
+				// L'objet new Function est instancié dans le context de plus haut niveau et n'existe pas dans le context de
+				// la function creerFonction, la variable local lui est donc inaccessible
+				return new Function("return x;"); // ici |x| fait référence au |x| global
+			}
+
+			function creerFonction2() {
+				var x = 20;
+				function f() {
+					return x; // ici |x| fait référence au |x| local juste avant
+				}
+				return f;
+			}
+
+			var f1 = creerFonction1();
+			console.log(f1());          // 10
+			var f2 = creerFonction2();
+			console.log(f2());          // 20
+
+
+			// Bien que ce code fonctionne dans un navigateur web, l'appel à f1() provoquera une
+			// ReferenceError dans Node.js car x ne sera pas trouvé. En effet, pour Node, la portée de plus haut niveau n'est pas la
+			// portée globale et x est ici local à la fonction.
+
+
+			function myFun4() {
+				let x = "Ok rep de myFun2";
+				return new Function("return x;"); // ici |x| fait référence au |x| global
+			}
+
+			//Spread operators expand an expression where multiple items are needed: [...items, 3, 4, 5]
+			function multiMax(first, ...remaining){
+				console.log("first : ", first);
+				console.log("remaining : ", remaining);
+			}
+
+			//Default parameters specify default parameter values that are used if no value is supplied during invocation:
+
+			function defaultparameter(ninja, action = "belle"){
+				return console.log("Ma " + action + " " + ninja);
+			}
+
+			const myPromise = new Promise((resolve, reject) => {setTimeout(() => {resolve('foo');}, 300);});
+
+			myPromise.then((value) => {
+				console.log("Alban : " + value);
+			});
+
+			//Lorsque les fonctions sont utilisées une unique fois, on peut utiliser une
+			// « expression de fonction immédiatement invoquée » (
+			// ou plus généralement appelée IIFE pour Immediately Invokable Function Expression en anglais).
+
+
+			(function() {
+				return "OK return IIFE";
+			})();
+
+			console.log(myFun1());
+			console.log(myFun2());
+			console.log(myFun3());
+			multiMax(2,3,4,5);
+			defaultparameter("Esther");
+			console.log(myPromise);
+
+
+		</script>
+	</head>
+	<body>
+		Outputs to the console (press F12)
+	</body>
+</html>

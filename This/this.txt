@@ -1,0 +1,101 @@
+https://medium.com/@vincent.bocquet/comprendre-lop%C3%A9rateur-this-en-javascript-41f8630141d4
+https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Op%C3%A9rateurs/L_op%C3%A9rateur_this#bind
+
+Le contexte global, c’est lorsque l’on exécute du code en dehors de toute fonction, de tout bloc.
+Si on utilise this dans ce contexte, il retourne l’objet global :
+
+console.log(this);
+
+// Dans un navigateur, cela retourne l'objet DOM window
+
+this.alert('Message');
+
+// Ouvre une boite de dialogue avec comme contenu : "Message".
+
+
+// C'est donc le même résultat que window.alert()
+
+En mode strict, this retourne exactement la même chose qu’en mode non-strict :
+
+"use strict";
+console.log(this);
+
+// Retourne l'objet DOM window dans le navigateur
+
+Lorsque l’on utilise this dans une fonction classique, il retourne un objet,
+l’objet global (comme si on l’utilise hors de toute fonction) :
+
+function maFonction() {
+  return this;
+}
+
+this.alert('Message1');
+window.alert('Message2');
+maFonction().alert("Message3");
+
+console.log(maFonction());
+
+// Dans un navigateur, cela retourne l'objet global window
+
+En mode strict, c’est un peu différent, this retourne undefined :
+
+function maFonction() {
+  "use strict";
+  return this;
+}
+
+maFonction();
+
+// Retourne undefined
+
+Ce n’est pas plus compliqué que cela. Attention par contre, dans nos exemples nous avons utilisé this
+sans qu’il soit défini à son appel.
+Grâce à apply() et call(), il est en effet possible de définir une valeur de this
+au sein de la fonction, ce qui change forcément l’utilisation que l’on peut en faire.
+
+Le cas des fonctions fléchées est un peu particulier car elles ne créent pas de nouveau contexte.
+Du coup, la valeur de this reprend celle du contexte dans laquelle la fonction est définie.
+
+Par exemple :
+
+const maFonction = () => { return this };
+
+maFonction();
+
+// Retourne window dans mon navigateur, this ayant la valeur de l'objet global.
+
+Maintenant, si on utilise this dans une fonction fléchée définie dans une méthode d’un objet, this retourne bien notre objet :
+
+const commentaire = {
+  getAuthor: function(){
+    const value = (() => this);
+    return value;
+  },
+};
+
+const test = commentaire.getAuthor();
+console.log(test());
+
+// Retourne bien notre objet complet
+
+
+Notez que si les fonctions anonymes et fléchées sont similaires, elles ont des liaisons this différentes. Alors que les fonctions anonymes (et toutes les fonctions JavaScript traditionnelles) créent leurs propres liaisons this, les fonctions fléchées héritent la liaison this de la fonction contenante.
+
+Cela signifie que les variables et constantes disponibles pour la fonction contenante sont aussi disponibles pour le gestionnaire d'évènements lors de l'utilisation d'une fonction fléchée.
+
+// Un objet peut être passé en premier argument
+// de call ou de apply
+var obj = { a: "Toto" };
+
+// Ici, on déclare une variable et la variable est affectée à l'objet global window comme propriété de celui-ci
+var a = "Global";
+
+function whatsThis(arg) {
+  // La valeur de this ici dépend de la façon
+  // dont la fonction est appelée
+  return this.a;
+}
+
+whatsThis();          // 'Global' car celui-ci dans la fonction n'est pas défini, il est donc défini par défaut sur l'objet global window
+whatsThis.call(obj);  // "Toto"
+whatsThis.apply(obj); // "Toto"

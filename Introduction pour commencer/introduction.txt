@@ -1,0 +1,7 @@
+
+https://developer.mozilla.org/fr/docs/Web/JavaScript/Une_r%C3%A9introduction_%C3%A0_JavaScript
+
+JavaScript possède une différence importante quant aux autres langages de programmation comme Java : en JavaScript,
+les blocs ne créent pas de portées pour les variables déclarées avec var, c'est la fonction qui gère la portée d'une variable
+déclarée avec var. Avec ECMAScript 2015, les instructions de déclarations, let et const permettent de créer des variables
+dont la portée est limitée à celle du bloc qui l'englobe.
