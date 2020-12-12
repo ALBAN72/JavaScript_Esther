@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>XHR</title>
+
+	</head>
+	<body>
+	<button id="ajaxButton" type="button">Faire une requete</button>
+	<script>
+
+		//https://developer.mozilla.org/fr/docs/Web/Guide/AJAX/Premiers_pas
+		(function() {
+			var httpRequest;
+
+			document.getElementById("ajaxButton").addEventListener('click', makeRequest);
+
+			function makeRequest() {
+
+				httpRequest = new XMLHttpRequest();
+
+				if (!httpRequest) {
+					alert('Abandon :( Impossible de creer une instance de XMLHTTP');
+					return false;
+				}
+				httpRequest.onreadystatechange = alertContents;
+				httpRequest.open('GET', 'test.html');
+				httpRequest.send();
+			}
+
+			function alertContents() {
+				if (httpRequest.readyState === XMLHttpRequest.DONE) {
+					if (httpRequest.status === 200) {
+						alert(httpRequest.responseText);
+					} else {
+						alert('Il y a eu un probleme avec la requete.');
+					}
+				}
+			}
+		})();
+
+	</script>
+	</body>
+</html>

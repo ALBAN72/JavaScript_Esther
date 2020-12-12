@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>A simple performance counter</title>
+		<script>
+
+			//C'est la méthode la plus "vieille" mais toujours utilisée par beaucoup de modules JavaScript
+			// Une callback est simplement une fonction que vous définissez. Le principe de la callback
+			// est de la passer en paramètre d'une fonction asynchrone. Une fois que la fonction asynchrone a fini sa tâche,
+			// elle va appeler notre fonction callback en lui passant un résultat. Ainsi, le code que nous mettons dans notre
+			// fonction callback sera exécuté de manière asynchrone. Cela ne vous rappelle pas quelque chose ? Les événements !
+			// Les événements sont un exemple typique de fonction asynchrone à laquelle on passe une fonction callback.
+
+			returnAPromiseWithNumber2()
+					.then(function(data) { // Data is 2
+						return data + 1;
+					})
+					.then(function(data) { // Data is 3
+						throw new Error('error');
+					})
+					.then(function(data) {
+						// Not executed
+					})
+					.catch(function(err) {
+						return 5;
+					})
+					.then(function(data) { // Data is 5
+						// Do something
+					});
+
+
+			returnAPromiseWithNumber2();
+
+		</script>
+	</head>
+	<body>
+		Outputs to the console (press F12)
+	</body>
+</html>

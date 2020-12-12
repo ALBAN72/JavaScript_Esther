@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<title>A simple performance counter</title>
-		<script>
+			<script>
 
 			//https://openclassrooms.com/fr/courses/5543061-ecrivez-du-javascript-pour-le-web/5577651-comprenez-comment-fonctionne-lasynchrone-en-js
 			//Eh bien, tout simplement qu'il n'y a qu'un seul fil d'exécution du code source.
@@ -10,7 +10,7 @@
 			// l'autre en attendant la fin de l'exécution de la ligne précédente. Il n'y a pas d'autre code
 			// qui pourra être exécuté en parallèle. Il ne peut faire qu'une seule chose à la fois.
 
-			//En fait il est possible et même très facile de faire de l'asynchrone en JavaScript,
+			//En fait il est p<div id="log">1) Started (<small>Début du code synchrone</small>)<br>1) Promise started (<small>Début du code asynchrone</small>)<br>1) Promise made (<small>Fin du code synchrone</small>)<br>1) Promise fulfilled (<small>Fin du code asynchrone</small>)<br></div>ossible et même très facile de faire de l'asynchrone en JavaScript,
 			// mais l'exécution restera synchrone...
 			//Si du code synchrone est du code qui s'exécute ligne après ligne en attendant la fin de l'exécution de la
 			// ligne précédente, alors on peut facilement en déduire que du code asynchrone va s'exécuter ligne après ligne,
@@ -18,7 +18,7 @@
 
 			//L'event loop
 
-			//n JavaScript, chaque ligne de code est exécutée de façon synchrone, mais il est possible de demander à exécuter du code
+			//En JavaScript, chaque ligne de code est exécutée de façon synchrone, mais il est possible de demander à exécuter du code
 			// de manière asynchrone. Et lorsque l'on demande à exécuter une fonction de façon asynchrone, la fonction en question est
 			// placée dans une sorte de file d'attente qui va exécuter toutes les fonctions qu'elle contient les unes après les autres.
 			// C'est ce qu'on appelle l'event loop. Tout le cœur du langage fonctionne autour de ça.
@@ -26,28 +26,113 @@
 			//Ainsi, le code n'est pas réellement exécuté en parallèle car il est mis en file d'attente, mais il ne bloque pas
 			// l'exécution du code depuis lequel il a été appelé.
 
-
 			//La fonction setTimeout  est la fonction la plus répandue lorsque l'on veut exécuter du code asynchrone sans bloquer
 			// le fil d'exécution en cours. Cette fonction prend 2 paramètres :
 			// La fonction à exécuter de manière asynchrone (qui sera donc ajoutée à la file d'attente de l'event loop) ;
 			// Le délai, en millisecondes, avant d'exécuter cette fonction.
 
-			setTimeout(function() {
-				console.log("I'm here!")
-			}, 5000);
+			setTimeout(() => {console.log("I'm here!")}, 2000);
+
+			function myGet1(timer){
+				return setTimeout(() => {console.log("I'm here GET1 !")}, timer,"ninja1");
+			}
+
+			function myGet2(timer){
+				return setTimeout(() => {console.log("I'm here GET2 !")}, timer,"ninja2");
+			}
+
+			const promiseGet1 = Promise.resolve(myGet1(1000));
+			const promiseGet2= new Promise((resolve, reject) => {
+
+				myGet2(500);
+
+			});
 
 			console.log("Where are you?");
+
+			Promise.all([promiseGet1,promiseGet2]).then((values) => {
+				console.log(values);
+			});
+
+			const promise1 = Promise.resolve(3);
+			const promise2 = 42;
+			const promise3 = new Promise((res, reject) => {
+
+					setTimeout(res, 15000, 'foo');
+
+			});
+
+			Promise.all([promise1, promise2, promise3]).then((values) => {
+				console.log(values);
+			});
+			// expected output: Array [3, 42, "foo"]
 
 
 			//Il existe d'autres méthodes un peu moins répandues, voire très peu utilisées :
 
-			setInterval  (doc) : elle fonctionne exactement comme  setTimeout , à ceci près qu'elle exécute la fonction passée en paramètre en boucle à une fréquence déterminée par le temps en millisecondes passé en second paramètre. Il suffira de passer la valeur de retour de  setInterval  à  clearInterval  pour stopper l'exécution en boucle de la fonction ;
+			//setInterval : elle fonctionne exactement comme  setTimeout , à ceci près qu'elle exécute la fonction
+			// passée en paramètre en boucle à une fréquence déterminée par le temps en millisecondes passé en second paramètre.
+			// Il suffira de passer la valeur de retour de  setInterval  à  clearInterval  pour stopper l'exécution en boucle de la
+			// fonction ;
 
-			setImmediate  (doc). Cette fonction prend en seul paramètre la fonction à exécuter de façon synchrone.  La fonction en question sera placée dans la file d'attente de l'event loop, mais va passer devant toutes les autres fonctions, sauf certaines spécifiques au Javascript : les événements (les mêmes qu'on a vus au premier chapitre, et qui sont donc exécutés de façon asynchrone  😉), le rendu, et l'I/O. Il existe aussi  nextTick , qui permet, là, de court-circuiter tout le monde. À utiliser avec précaution, donc...
+			//setImmediate  (doc). Cette fonction prend en seul paramètre la fonction à exécuter de façon synchrone.
+			// La fonction en question sera placée dans la file d'attente de l'event loop, mais va passer devant toutes les
+			// autres fonctions, sauf certaines spécifiques au Javascript : les événements
+			// (les mêmes qu'on a vus au premier chapitre, et qui sont donc exécutés de façon asynchrone)
+			// , le rendu, et l'I/O. Il existe aussi  nextTick , qui permet, là, de court-circuiter tout le monde.
+			// À utiliser avec précaution, donc...
+
+
+			'use strict';
+			var comptePromesse = 0;
+
+			function testPromise() {
+				var thisComptePromesse = ++comptePromesse;
+
+				var log = document.getElementById('log');
+				log.insertAdjacentHTML('beforeend', thisComptePromesse +
+						') Started (<small>Debut du code synchrone</small>)<br/>');
+
+				// on crée une nouvelle promesse :
+				var p1 = new Promise(
+						// La fonction de résolution est appelée avec la capacité de
+						// tenir ou de rompre la promesse
+						function(resolve, reject) {
+							log.insertAdjacentHTML('beforeend', thisComptePromesse +
+									') Promise started (<small>Debut du code asynchrone</small>)<br/>');
+
+							// Voici un exemple simple pour créer un code asynchrone
+							window.setTimeout(
+									function() {
+										// On tient la promesse !
+										resolve(thisComptePromesse);
+									}, Math.random() * 2000 + 1000);
+						});
+
+				// On définit ce qui se passe quand la promesse est tenue
+				// et ce qu'on appelle (uniquement) dans ce cas
+				// La méthode catch() définit le traitement à effectuer
+				// quand la promesse est rompue.
+				p1.then(
+						// On affiche un message avec la valeur
+						function(val) {
+							log.insertAdjacentHTML('beforeend', val +
+									') Promise fulfilled (<small>Fin du code asynchrone</small>)<br/>');
+						}).catch(
+						// Promesse rejetée
+						function() {
+							console.log("promesse rompue");
+						});
+
+				log.insertAdjacentHTML('beforeend', thisComptePromesse +
+						') Promise made (<small>Fin du code synchrone</small>)<br/>');
+			}
+
 
 		</script>
 	</head>
 	<body>
-		Outputs to the console (press F12)
+	<button id="btn" type="button" onclick="testPromise()">Creer un objet Promise !</button>
+	<div id="log"></div>
 	</body>
 </html>
